@@ -8,6 +8,8 @@ import Link from "next/link"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 
+export const runtime = 'edge';
+
 export default async function Login(props: { searchParams: Promise<Message> }) {
   const searchParams = await props.searchParams
   return (

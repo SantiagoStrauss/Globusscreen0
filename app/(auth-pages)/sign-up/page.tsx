@@ -11,7 +11,9 @@ import { Button } from "@/components/ui/button"
 import { Globe } from 'lucide-react'
 import { useSearchParams, useRouter } from "next/navigation"
 
-// Separate component for the form that uses useSearchParams
+export const runtime = 'edge';
+
+
 function SignupForm({ language, translations }: { language: 'en' | 'es', translations: any }) {
   const searchParams = useSearchParams()
   const [errors, setErrors] = useState<{email?: string, password?: string}>({})

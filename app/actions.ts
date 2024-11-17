@@ -1,9 +1,11 @@
-"use server";
+'use client'
 
 import { encodedRedirect } from "@/utils/utils";
 import { createClient } from "@/utils/supabase/server";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
+
+export const runtime = 'edge';
 
 export const signUpAction = async (formData: FormData) => {
   const email = formData.get("email")?.toString();

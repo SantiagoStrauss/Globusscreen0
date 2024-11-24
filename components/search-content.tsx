@@ -9,10 +9,33 @@ import { Label } from "@/components/ui/label"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { Loader2, AlertCircle, CheckCircle2, User, Building2 } from "lucide-react"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+/////3
+// Define dataset details mapping
+const datasetDetailsInitial: { [key: string]: { Name: string; Country: string } } = {
+  us_sam_exclusions: { Name: "TREAS-OFAC", Country: "United States" },
+  us_ofac_sdn: { Name: "US OFAC Specially Designated Nationals (SDN) List", Country: "United States" },
+  interpol_red_notices: { Name: "INTERPOL Red Notices", Country: "International" },
+  ua_nsdc_sanctions: { Name: "Ukraine NSDC State Register of Sanctions", Country: "Ukraine" },
+  jp_mof_sanctions: { Name: "Japan Economic Sanctions and List of Eligible People", Country: "Japan" },
+  gb_hmt_sanctions: { Name: "UK HMT/OFSI Consolidated List of Targets", Country: "United Kingdom" },
+  ch_seco_sanctions: { Name: "Swiss SECO Sanctions/Embargoes", Country: "Switzerland" },
+  be_fod_sanctions: { Name: "Belgian Financial Sanctions", Country: "Belgium" },
+  nz_russia_sanctions: { Name: "New Zealand Russia Sanctions", Country: "New Zealand" },
+  au_dfat_sanctions: { Name: "Australian Sanctions Consolidated List", Country: "Australia" },
+  gb_fcdo_sanctions: { Name: "UK FCDO Sanctions List", Country: "United Kingdom" },
+  mc_fund_freezes: { Name: "Monaco National Fund Freezing List", Country: "Monaco" },
+  fr_tresor_gels_avoir: { Name: "EU Financial Sanctions Files (FSF)", Country: "European Union" },
+  eu_fsf: { Name: "French National Asset Freezing System", Country: "France" },
+  ca_dfatd_sema_sanctions: { Name: " Canadian Consolidated Autonomous Sanctions List", Country: "Canada" },
+  us_trade_csl: { Name: "US Trade Consolidated Screening List (CSL)", Country: "United States" },
 
-export const runtime = 'edge';
-////111111
-// Define types for the API request and response
+  // Add more predefined mappings here
+}
+
+interface DatasetDetails {
+  [key: string]: { Name: string; Country: string }
+}
+
 interface PersonQuery {
   queries: {
     match: {
@@ -73,18 +96,27 @@ interface ApiResponse {
 
 const ResultCard: React.FC<{ result: Result }> = ({ result }) => {
   const [isExpanded, setIsExpanded] = useState(false)
+  const [datasetDetails, setDatasetDetails] = useState<DatasetDetails>(datasetDetailsInitial)
 
-  // Function to render property key in a readable format
   const formatKey = (key: string) => {
-    // Convert camelCase or snake_case to Title Case
     return key
-      .replace(/([A-Z])/g, ' $1') // Add space before capital letters
-      .replace(/_/g, ' ') // Replace underscores with spaces
-      .replace(/\b\w/g, char => char.toUpperCase()) // Capitalize first letter of each word
+      .replace(/([A-Z])/g, ' $1')
+      .replace(/_/g, ' ')
+      .replace(/\b\w/g, char => char.toUpperCase())
+  }
+  const triggerWords = ['sanction', 'wanted', 'crime', 'role.spy']
+
+  const handleExpand = () => {
+    setIsExpanded(true)
+  }
+
+  const handleCollapse = (e: React.MouseEvent) => {
+    e.stopPropagation()
+    setIsExpanded(false)
   }
 
   return (
-    <Card className="mb-4 cursor-pointer" onClick={() => setIsExpanded(!isExpanded)}>
+    <Card className="mb-4 cursor-pointer" onClick={handleExpand}>
       <CardHeader>
         <CardTitle>{result.caption}</CardTitle>
         <CardDescription>{result.schema}</CardDescription>
@@ -95,6 +127,15 @@ const ResultCard: React.FC<{ result: Result }> = ({ result }) => {
         <p><strong>Score:</strong> {result.score}</p>
         <p><strong>First Seen:</strong> {new Date(result.first_seen).toLocaleString()}</p>
         <p><strong>Last Seen:</strong> {new Date(result.last_seen).toLocaleString()}</p>
+        {result.properties.topics?.some(topic => triggerWords.includes(topic)) && (
+          <Alert variant="destructive" className="mt-4">
+            <AlertCircle className="h-4 w-4" />
+            <AlertTitle>Alert</AlertTitle>
+            <AlertDescription>
+              This entry is related to sanctions, compliance, or regulation.
+            </AlertDescription>
+          </Alert>
+        )}
         <AnimatePresence>
           {isExpanded && (
             <motion.div
@@ -103,13 +144,32 @@ const ResultCard: React.FC<{ result: Result }> = ({ result }) => {
               exit={{ opacity: 0, height: 0 }}
               className="mt-4 space-y-2"
             >
+              <button 
+                onClick={handleCollapse} 
+                className="mb-4 text-sm text-blue-500 hover:underline"
+              >
+                Collapse
+              </button>
               {Object.entries(result.properties).map(([key, values]) => (
                 <p key={key}>
                   <strong>{formatKey(key)}:</strong> {Array.isArray(values) ? values.join(', ') : values}
                 </p>
               ))}
-              {/* Display additional fields outside properties if needed */}
-              <p><strong>Datasets:</strong> {result.datasets.join(', ') || 'N/A'}</p>
+              {/* Datasets Section */}
+              <div>
+                <strong>Datasets:</strong>
+                <div className="flex flex-wrap gap-2 mt-2">
+                  {result.datasets.map(dataset => (
+                    <Card key={dataset} className="w-48 p-2">
+                      <CardContent>
+                        <p><strong>Name:</strong> {datasetDetails[dataset]?.Name || 'N/A'}</p>
+                        <p><strong>Country:</strong> {datasetDetails[dataset]?.Country || 'N/A'}</p>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
+              </div>
+              {/* Additional Fields */}
               <p><strong>Target:</strong> {result.target ? 'Yes' : 'No'}</p>
               <p><strong>Last Change:</strong> {new Date(result.last_change).toLocaleString()}</p>
               <p><strong>Features:</strong></p>
@@ -153,7 +213,7 @@ export function SearchContent() {
         properties.nationality = [personForm.nationality.trim()]
       }
       if (personForm.idNumber.trim()) {
-        properties.idNumber = [personForm.idNumber.trim()] // Removed parseInt
+        properties.idNumber = [personForm.idNumber.trim()]
       }
       return {
         queries: {
@@ -272,7 +332,7 @@ export function SearchContent() {
                   <Label htmlFor="idNumber">ID Number</Label>
                   <Input
                     id="idNumber"
-                    type="text" // Changed to text
+                    type="text"
                     placeholder="e.g., 123456"
                     value={personForm.idNumber}
                     onChange={(e) => setPersonForm({ ...personForm, idNumber: e.target.value })}
@@ -368,6 +428,6 @@ export function SearchContent() {
           </motion.div>
         )}
       </AnimatePresence>
-      </div>
-      )
-      }
+    </div>
+  )
+}

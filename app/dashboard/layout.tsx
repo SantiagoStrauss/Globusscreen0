@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react"
 import Link from "next/link"
-import { usePathname } from "next/navigation"
+import {redirect, usePathname} from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import {
@@ -16,6 +16,8 @@ import {
 import { Input } from "@/components/ui/input"
 import { Bell, LogOut, Home, Users, History, Search, CreditCard, Settings, Menu, Sun, Moon, X } from 'lucide-react'
 import { GearIcon, PersonIcon } from "@radix-ui/react-icons"
+import {createClient} from "@/utils/supabase/server";
+import {getUserData, signOutAction} from "@/app/actions";
 
 export const runtime = 'edge';
 
@@ -107,7 +109,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                 Settings
               </DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuItem>
+              <DropdownMenuItem onSelect={signOutAction}>
                 <LogOut className="mr-2 h-4 w-4" />
                 Log out
               </DropdownMenuItem>

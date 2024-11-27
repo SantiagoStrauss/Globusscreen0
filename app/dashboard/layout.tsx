@@ -16,8 +16,7 @@ import {
 import { Input } from "@/components/ui/input"
 import { Bell, LogOut, Home, Users, History, Search, CreditCard, Settings, Menu, Sun, Moon, X } from 'lucide-react'
 import { GearIcon, PersonIcon } from "@radix-ui/react-icons"
-import {createClient} from "@/utils/supabase/server";
-import {getUserData, signOutAction} from "@/app/actions";
+import { signOutAction} from "@/app/actions";
 
 export const runtime = 'edge';
 

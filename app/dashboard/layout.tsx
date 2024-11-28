@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react"
 import Link from "next/link"
-import {redirect, usePathname} from "next/navigation"
+import { usePathname} from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import {
@@ -34,7 +34,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const [isDarkMode, setIsDarkMode] = useState(false)
   const [searchQuery, setSearchQuery] = useState("")
-  const [userData, setUserData] = useState(null);
+  const [userData, setUserData] = useState({first_name: '', last_name: '', email: ''});
   
   useEffect(() => {
     const isDark = localStorage.getItem("darkMode") === "true"

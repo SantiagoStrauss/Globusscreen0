@@ -129,4 +129,22 @@ export const signOutAction = async () => {
   return redirect("/");
 };
 
+export const getUserByEmail = async () => {
+  const supabase = await createClient();
+  const user = await supabase.auth.getUser();
+  if (user.data) {
+    const { data, error } = await supabase
+        .from('users')
+        .select('*')
+        .eq('email', user.data.user?.email);
+
+    if (error) {
+      console.error(error);
+      return null;
+    }
+
+    return data[0];
+  }
+};
+
 

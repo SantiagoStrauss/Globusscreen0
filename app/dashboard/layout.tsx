@@ -16,7 +16,7 @@ import {
 import { Input } from "@/components/ui/input"
 import { Bell, LogOut, Home, Users, History, Search, CreditCard, Settings, Menu, Sun, Moon, X } from 'lucide-react'
 import { GearIcon, PersonIcon } from "@radix-ui/react-icons"
-import { signOutAction} from "@/app/actions";
+import {getUserByEmail, signOutAction} from "@/app/actions";
 
 export const runtime = 'edge';
 
@@ -34,12 +34,20 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const [isDarkMode, setIsDarkMode] = useState(false)
   const [searchQuery, setSearchQuery] = useState("")
+  const [userData, setUserData] = useState(null);
   
   useEffect(() => {
     const isDark = localStorage.getItem("darkMode") === "true"
     setIsDarkMode(isDark)
     document.documentElement.classList.toggle("dark", isDark)
+    fetchUserEmail().then();
+    
   }, [])
+
+  async function fetchUserEmail() {
+    const email = await getUserByEmail();
+    setUserData(email);
+  }
 
   const toggleDarkMode = () => {
     const newDarkMode = !isDarkMode
@@ -91,9 +99,9 @@ export default function Layout({ children }: { children: React.ReactNode }) {
               <Button variant="ghost" className="w-full justify-start">
                 <Avatar className="h-8 w-8 mr-2">
                   <AvatarImage src="/placeholder-user.jpg" alt="User" />
-                  <AvatarFallback>SR</AvatarFallback>
+                  <AvatarFallback>{userData?.first_name?.charAt(0) || ""}{userData?.last_name?.charAt(0) || ""}</AvatarFallback>
                 </Avatar>
-                <span className="truncate">Santiago Ramos</span>
+                <span className="truncate">{userData?.first_name || ""} {userData?.last_name || ""}</span>
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="start" className="w-56">

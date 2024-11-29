@@ -1,0 +1,592 @@
+import { useState } from "react"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Input } from "@/components/ui/input"
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
+import { Button } from "@/components/ui/button"
+import { Badge } from "@/components/ui/badge"
+import { ChevronLeft, ChevronRight, Search } from 'lucide-react'
+
+interface DataItem {
+  id: string
+  name: string
+  country: string
+}
+
+const mockData: DataItem[] = [
+  { id: "1", name: "ACF List of War Enablers", country: "Russia" },
+  { id: "2", name: "African Development Bank Debarred Entities", country: "Global (	African Development Bank Group)" },
+  { id: "3", name: "Argentina Members of Parliament", country: "Argentina" },
+  { id: "4", name: "Argentina RePET Sanctions", country: "Argentina" },
+  { id: "5", name: "Armenia Public Officials and Associates", country: "Armenia" },
+  { id: "6", name: "Asian Development Bank Sanctions", country: "Global" },
+  { id: "7", name: "Australian Sanctions Consolidated List", country: "Australia" },
+  { id: "8", name: "Democratic People's Republic Of Korea (North Korea) Sanctions Regime", country: "Australia" },
+  { id: "9", name: "Former Federal Republic Of Yugoslavia Sanctions Regime", country: "Australia" },
+  { id: "10", name: "Iran Sanctions Regime", country: "Australia" },
+  { id: "11", name: "Iraq Sanctions Regime", country: "Australia" },
+  { id: "12", name: "Libya Sanctions Regime", country: "Australia" },
+  { id: "13", name: "Myanmar Sanctions Regime", country: "Australia" },
+  { id: "14", name: "Russia Sanctions Regime", country: "Australia" },
+  { id: "15", name: "Serious Corruption Sanctions Regime", country: "Australia" },
+  { id: "16", name: "Serious Violations Or Serious Abuses Of Human Rights Sanctions Regime", country: "Australia" },
+  { id: "17", name: "Significant Cyber Incidents Sanctions Regime", country: "Australia" },
+  { id: "18", name: "Specified Ukraine Regions Sanctions Regime", country: "Australia" },
+  { id: "19", name: "Syria Sanctions Regime", country: "Australia" },
+  { id: "20", name: "Ukraine Sanctions Regime", country: "Australia" },
+  { id: "21", name: "Zimbabwe Sanctions Regime", country: "Australia" },
+  { id: "22", name: "Austria Public Officials", country: "Austria" },
+  { id: "23", name: "Austrian National Bank Regulations on Terrorism Financing Restrictions", country: "Austria" },
+  { id: "24", name: "Azerbaijan Domestic List", country: "Azerbaijan" },
+  { id: "25", name: "Belgian Financial Sanctions", country: "Belgium" },
+  { id: "26", name: "National list of terrorist suspects whose assets have been frozen", country: "Belgium" },
+  { id: "27", name: "Brazil Entities Prohibited from Offering Auditing Services", country: "Brazil" },
+  { id: "28", name: "Brazil List of Debarred Bidders", country: "Brazil" },
+  { id: "29", name: "Brazil List of Individuals Disqualified from Public Service", country: "Brazil" },
+  { id: "30", name: "Brazil National Register of Disreputable and Suspended Companies", country: "Brazil" },
+  { id: "31", name: "Brazil Politically Exposed Persons", country: "Brazil" },
+  { id: "32", name: "Brazil Register of Persons Disqualified from Senior Roles", country: "Brazil" },
+  { id: "33", name: "Bulgarian Persons of Interest", country: "Bulgaria" },
+  { id: "34", name: "Business Identifier Code (BIC) Reference Data", country: "Global (SWIFT)" },
+  { id: "35", name: "Canadian Consolidated Autonomous Sanctions List", country: "Canada" },
+  { id: "36", name: "Justice For Victims Of Corrupt Foreign Officials Act", country: "Canada" },
+  { id: "37", name: "Special Economic Measures Act", country: "Canada" },
+  { id: "38", name: "Canadian Freezing Assets of Corrupt Foreign Officials Act", country: "Canada" },
+  { id: "39", name: "Freezing Assets of Corrupt Foreign Officials (Tunisia) Regulations (SOR/2011-78)", country: "Canada" },
+  { id: "40", name: "Freezing Assets of Corrupt Foreign Officials (Ukraine) Regulations (SOR/2014-44)", country: "Canada" },
+  { id: "41", name: "Canadian Listed Terrorist Entities", country: "Canada" },
+  { id: "42", name: "Canadian Named Research Organizations list", country: "Canada" },
+  { id: "43", name: "Policy On Sensitive Technology Research And Affiliations Of Concern", country: "Canada" },
+  { id: "44", name: "Cayman Islands Members of Parliament", country: "Caymans" },
+  { id: "45", name: "Cayman Islands Senior Judicial Officers", country: "Caymans" },
+  { id: "46", name: "China National People's Congress on Wikipedia", country: "Global" },
+  { id: "47", name: "China Sanctions Research", country: "China" },
+  { id: "48", name: "Chinese Anti-Foreign Sanctions Law (AFSL)", country: "China" },
+  { id: "49", name: "Chinese Counter-Measures List", country: "China" },
+  { id: "50", name: "Chinese Unreliable Entities List (UEL)", country: "China" },
+  { id: "51", name: "Colombian Joining the Dots PEPs", country: "Colombia" },
+  { id: "52", name: "Colombian PEP Declarations", country: "Colombia" },
+  { id: "53", name: "Croatia State Registry of Public Officials", country: "Croatia" },
+  { id: "54", name: "Cuba Members of the Parliament", country: "Cuba" },
+  { id: "55", name: "Cyprus Companies and Corporate Officers", country: "Cyprus" },
+  { id: "56", name: "Czech Republic Business Register", country: "Czechia" },
+  { id: "57", name: "Czech Republic National Sanctions", country: "Czechia" },
+  { id: "58", name: "Law On Restrictive Measures Against Certain Serious Acts Applied In International Relations (Act No. 1/2023 Coll.)", country: "Czechia" },
+  { id: "59", name: "Denmark, Faroe Islands and Greenland PEPs", country: "Denmark" },
+  { id: "60", name: "DPRK Reports", country: "United Kingdom" },
+  { id: "61", name: "EBRD Ineligible Entities", country: "Global" },
+  { id: "62", name: "Egypt Domestic Terrorist List", country: "Egypt" },
+  { id: "63", name: "EITI State-Owned Enterprises Database", country: "Global (EITI)" },
+  { id: "64", name: "Estonia e-Business Register (E-äriregister)", country: "Estonia" },
+  { id: "65", name: "Estonia International Sanctions Act List", country: "Estonia" },
+  { id: "66", name: "Estonia Members of the Riigikogu", country: "Estonia" },
+  { id: "67", name: "EU Consolidated Travel Bans", country: "European Union" },
+  { id: "68", name: "EU Council Official Journal Sanctioned Entities", country: "European Union" },
+  { id: "69", name: "EU Council Regulation 2023/2878 (Sanctions Related To Russian Aggression Against Ukraine)", country: "European Union" },
+  { id: "70", name: "EU Early Detection and Exclusion System (EDES)", country: "European Union" },
+  { id: "71", name: "EU ESMA Sanctions", country: "European Union" },
+  { id: "72", name: "EU ESMA Suspensions and Removals", country: "European Union" },
+  { id: "73", name: "EU Financial Instruments Reference Data System (FIRDS)", country: "European Union" },
+  { id: "74", name: "EU Financial Sanctions Files (FSF)", country: "European Union" },
+  { id: "75", name: "EU Measures Protecting Against The Effects Of The Extra-Territorial Application Of Certain US Legislation", country: "European Union" },
+  { id: "76", name: "EU Misappropriation of State Funds Of Tunisia (MSF)", country: "European Union" },
+  { id: "77", name: "EU Misappropriation of State Funds Of Ukraine (MSF)", country: "European Union" },
+  { id: "78", name: "EU Montenegro UN Security Council Resolution 757 (1992)", country: "European Union" },
+  { id: "79", name: "EU Prohibiting The Satisfying Of Certain Claims In Relation To UN Security Council Resolution 757(1992)", country: "Serbia" },
+  { id: "80", name: "EU Restrictive Measures Against Cyber-Attacks Threatening The Union Or Its Member States", country: "European Union" },
+  { id: "81", name: "EU Restrictive Measures Against Serious Human Rights Violations And Abuses", country: "European Union" },
+  { id: "82", name: "EU Restrictive Measures Against Supporters Of Hamas And The Palestinian Islamic Jihad", country: "European Union" },
+  { id: "83", name: "EU Restrictive Measures Against Syria", country: "European Union" },
+  { id: "84", name: "EU Restrictive Measures Against The Proliferation And Use Of Chemical Weapons", country: "European Union" },
+  { id: "85", name: "EU Restrictive Measures In Relation To Serious Human Rights Violations In Iran", country: "European Union" },
+  { id: "86", name: "EU Restrictive Measures In Relation To The Campaign Against Latinscript Schools In The Transnistrian Region", country: "European Union" },
+  { id: "87", name: "EU Restrictive Measures In Relation To The Non-Proliferation Of The Weapons Of Mass Destruction (WMD)", country: "European Union" },
+  { id: "88", name: "EU Restrictive Measures In Respect Of Actions Undermining Or Threatening Ukraine (Territorial Integrity)", country: "European Union" },
+  { id: "89", name: "EU Restrictive Measures In Response To The Illegal Annexation Of Crimea And Sevastopol (Crimea)", country: "European Union" },
+  { id: "90", name: "EU Restrictive Measures In Response To The Illegal Russian Occupation Certain Non-Government Controlled Areas Of Ukraine", country: "European Union" },
+  { id: "91", name: "EU Restrictive Measures In View Of Actions Destabilising The Republic Of Moldova", country: "European Union" },
+  { id: "92", name: "EU Restrictive Measures In View Of Activities Undermining The Stability And The Political Transition Of Sudan", country: "European Union" },
+  { id: "93", name: "EU Restrictive Measures In View Of Iran's Military Support of Russia's War Of Aggression Against Ukraine", country: "European Union" },
+  { id: "94", name: "EU Restrictive Measures In View Of Russia's Actions Destabilizing The Situation In Ukraine (Sectoral Restrictive Measures)", country: "European Union" },
+  { id: "95", name: "EU Restrictive Measures In View Of The Situation In Bosnia And Herzegovina", country: "European Union" },
+  { id: "96", name: "EU Restrictive Measures In View Of The Situation In Burundi", country: "European Union" },
+  { id: "97", name: "EU Restrictive Measures In View Of The Situation In Guatemala", country: "European Union" },
+  { id: "98", name: "EU Restrictive Measures In View Of The Situation In Guinea", country: "European Union" },
+  { id: "99", name: "EU Restrictive Measures In View Of The Situation In Haiti", country: "European Union" },
+  { id: "100", name: "EU Restrictive Measures In View Of The Situation In Lebanon", country: "European Union" },
+  { id: "101", name: "EU Restrictive Measures In View Of The Situation In Libya", country: "European Union" },
+  { id: "102", name: "EU Restrictive Measures In View Of The Situation In Mali", country: "European Union" },
+  { id: "103", name: "EU Restrictive Measures In View Of The Situation In Myanmar And Burma", country: "European Union" },
+  { id: "104", name: "EU Restrictive Measures In View Of The Situation In Nicaragua", country: "European Union" },
+  { id: "105", name: "EU Restrictive Measures In View Of The Situation In Niger", country: "European Union" },
+  { id: "106", name: "EU Restrictive Measures In View Of The Situation In South Sudan", country: "European Union" },
+  { id: "107", name: "EU Restrictive Measures In View Of The Situation In Sudan", country: "European Union" },
+  { id: "108", name: "EU Restrictive Measures In View Of The Situation In The Democratic Republic Of The Congo", country: "European Union" },
+  { id: "109", name: "EU Restrictive Measures In View Of The Situation In Venezuela", country: "European Union" },
+  { id: "110", name: "EU Restrictive Measures In View Of Turkey's Unauthorized Drilling In The Eastern Mediterranean", country: "European Union" },
+  { id: "111", name: "EU Restrictive Measures With Respect To ISIL (Da'esh) And Al-Qaida (ISIL/Daesh & Al-Qaida)", country: "European Union" },
+  { id: "112", name: "EU Specific Measures To Combat Terrorism", country: "European Union" },
+  { id: "113", name: "EU Specific Restrictive Measures In Relation To The Events At The Tiananmen Square Protests Of 1989", country: "European Union" },
+  { id: "114", name: "Restrictive Measures In View Of The Situation In Belarus And The Involvement Of Belarus In The Russian Aggression Against Ukraine", country: "European Union" },
+  { id: "115", name: "EU Prominent Public Functions", country: "European Union" },
+  { id: "116", name: "EU Sanctions Map", country: "European Union" },
+  { id: "117", name: "Europe Most Wanted Fugitives", country: "European Union" },
+  { id: "118", name: "European Commitee of the Regions Members", country: "European Union" },
+  { id: "119", name: "European Parliament Members", country: "European Union" },
+  { id: "120", name: "Every Politician", country: "Global (MySociety)" },
+  { id: "121", name: "Forbes 2021 List of Russian Billionaires", country: "Russia" },
+  { id: "122", name: "France AMF Illegal Financial Services list", country: "France" },
+  { id: "123", name: "France AMF Regulatory sanctions", country: "France" },
+  { id: "124", name: "French Mayors", country: "France" },
+  { id: "125", name: "French National Assembly", country: "France" },
+  { id: "126", name: "French National Asset Freezing System", country: "France" },
+  { id: "127", name: "Art L. 562-2 And 562-3 Of The Monetary And Financial Code", country: "France" },
+  { id: "128", name: "French Senators", country: "France" },
+  { id: "129", name: "Georgia Public Official Asset Declarations", country: "Georgia" },
+  { id: "130", name: "Georgian Otkhozoria–Tatunashvili List", country: "Georgia" },
+  { id: "131", name: "German Legislators from AbgeordnetenWatch", country: "Germany" },
+  { id: "132", name: "Germany BKA Wanted Fugitives", country: "Germany" },
+  { id: "133", name: "Global Energy Ownership Tracker", country: "Global" },
+  { id: "134", name: "Guernsey FSC Prohibitions and Disqualified Directors", country: "Guernsey" },
+  { id: "135", name: "Hong Kong Legislative Council Members", country: "Hong Kong" },
+  { id: "136", name: "Hong Kong Principal Officials", country: "Hong Kong" },
+  { id: "137", name: "Iceland parliament", country: "Iceland" },
+  { id: "138", name: "ICIJ Offshore Leaks Database", country: "Global (ICIJ)" },
+  { id: "139", name: "Bahamas Leaks (2016)", country: "Global (ICIJ)" },
+  { id: "140", name: "Offshore Leaks (2013)", country: "Global (ICIJ)" },
+  { id: "141", name: "Panama Papers (2016)", country: "Global (ICIJ)" },
+  { id: "142", name: "Pandora Papers (2021)", country: "Global (ICIJ)" },
+  { id: "143", name: "Paradise Papers (2017)", country: "Global (ICIJ)" },
+  { id: "144", name: "India National Stock Exchange Debarred Entities", country: "India" },
+  { id: "145", name: "Indian Ministry of Home Affairs Banned Organizations", country: "India" },
+  { id: "146", name: "Unlawful Activities (Prevention) Act, 1967", country: "India" },
+  { id: "147", name: "Indonesia 2018 Regional Head Election Results", country: "Indonesia" },
+  { id: "148", name: "Indonesian List of Suspected Terrorists and Terrorist Organizations", country: "Indonesia" },
+  { id: "149", name: "Inter-American Development Bank Sanctions", country: "Global" },
+  { id: "150", name: "INTERPOL Red Notices", country: "Global" },
+  { id: "151", name: "Iran Sanctions List", country: "Iran" },
+  { id: "152", name: "Individuals And Entities In The Sanction’s List Of The Islamic Republic Of Iran", country: "Iran" },
+  { id: "153", name: "Iran UANI Business Registry", country: "United States" },
+  { id: "154", name: "Ireland Unlawful Organisation (Suppression) Orders", country: "Ireland" },
+  { id: "155", name: "Isle of Man FSA Disqualified Directors", country: "Isle of Man" },
+  { id: "156", name: "Israel Knesset Members", country: "Israel" },
+  { id: "157", name: "Israel Prevention of Distribution and Financing of WMDs designations", country: "Israel" },
+  { id: "158", name: "Israel Sanctioned Crypto Wallets List", country: "Israel" },
+  { id: "159", name: "Israel Terrorists Organizations and Unauthorized Associations lists", country: "Israel" },
+  { id: "160", name: "Japan Economic Sanctions and List of Eligible People", country: "Japan" },
+  { id: "161", name: "Japan METI End User List", country: "Japan" },
+  { id: "162", name: "Kazakh Terrorist and Terror Financing lists", country: "Kazakhstan" },
+  { id: "163", name: "Kazakhstan State Register of legal entities", country: "Kazakhstan" },
+  { id: "164", name: "Kyrgyz National List", country: "Kyrgyzstan" },
+  { id: "165", name: "Latvia FIU Sanctions", country: "Latvia" },
+  { id: "166", name: "Latvia's Magnitsky Law Sanctions List", country: "Latvia" },
+  { id: "167", name: "Latvian Saeima", country: "Latvia" },
+  { id: "168", name: "Legal Entity Identifier (LEI) Reference Data", country: "Global (GLEIF)" },
+  { id: "169", name: "Liechtenstein Posted Workers Act (EntsG) Sanctions", country: "Liechtenstein" },
+  { id: "170", name: "Lithuania Designated Persons Under Magnitsky Amendments", country: "Lithuania" },
+  { id: "171", name: "Lithuania Illegal Financial Services", country: "Lithuania" },
+  { id: "172", name: "Lithuania Illegal Gambling Operators", country: "Lithuania" },
+  { id: "173", name: "Lithuania Members of the Seimas", country: "Lithuania" },
+  { id: "174", name: "Lithuania PEPs from the register of private interests", country: "Lithuania" },
+  { id: "175", name: "Lithuanian International Sanctions", country: "Lithuania" },
+  { id: "176", name: "Luxembourg Administrative Sanctions", country: "Luxembourg" },
+  { id: "177", name: "Malaysia Financial Consumer Alert List", country: "Malaysia" },
+  { id: "178", name: "Malaysia MOHA Sanctions List", country: "Malaysia" },
+  { id: "179", name: "Malaysia Securities Commission AOB Enforcements", country: "Malaysia" },
+  { id: "180", name: "Malaysia Securities Commission Investor Alert List", country: "Malaysia" },
+  { id: "181", name: "Mexico Chamber of Deputies", country: "Mexico" },
+  { id: "182", name: "Mexico Governors", country: "Mexico" },
+  { id: "183", name: "Mexico Senate", country: "Mexico" },
+  { id: "184", name: "Moldovan Ban List of Economic Operators", country: "Moldova" },
+  { id: "185", name: "Moldovan Sanctions for Terrorism and Proliferation of WMD", country: "Moldova" },
+  { id: "186", name: "Monaco National Fund Freezing List", country: "Monaco" },
+  { id: "187", name: "Navalny 35 List of Individuals for Sanctioning", country: "Russia" },
+  { id: "188", name: "Nepal Prohibited Persons or Groups according per National Strategy and Action Plan (2076-2081)", country: "Nepal" },
+  { id: "189", name: "Netherlands National Sanctionlist Terrorism", country: "Netherlands" },
+  { id: "190", name: "Netherlands Police Nationale Opsporingslijst", country: "Netherlands" },
+  { id: "191", name: "New Zealand Designated Terrorist Entities", country: "New Zealand" },
+  { id: "192", name: "New Zealand Russia Sanctions", country: "New Zealand" },
+  { id: "193", name: "Russia Sanctions Act 2022", country: "New Zealand" },
+  { id: "194", name: "Nigeria Joining the Dots PEPs and PEP Relatives", country: "Nigeria" },
+  { id: "195", name: "Nigeria Sanctions List", country: "Nigeria" },
+  { id: "196", name: "Nigerian Politically Exposed Persons data by Chipper", country: "Nigeria" },
+  { id: "197", name: "Norges Bank Investment Management observation and exclusion of companies", country: "Norway" },
+  { id: "198", name: "North Macedonia Elected and Appointed Officials", country: "North Macedonia" },
+  { id: "199", name: "OHCHR List of Companies Linked to Illegal Settlement in the West Bank", country: "Global" },
+  { id: "200", name: "OpenCorporates", country: "Global (OpenCorporates)" },
+  { id: "201", name: "OpenFIGI Securities Information", country: "Global (OpenFIGI)" },
+  { id: "202", name: "OpenSanctions Research Data", country: "Global" },
+  { id: "203", name: "Pakistan NACTA Proscribed Persons", country: "Pakistan" },
+  { id: "204", name: "Palestine Monetary Authority Local Freezing List", country: "Palestine" },
+  { id: "205", name: "PEPs from Chile Interest and Asset Declarations", country: "Chile" },
+  { id: "206", name: "PermID Open Data", country: "Global (London Stock Exchange Group)" },
+  { id: "207", name: "Philippines SEC Advisories", country: "Philippines" },
+  { id: "208", name: "Philippines Top Most Wanted Persons in the Cordillera Regions", country: "Philippines" },
+  { id: "209", name: "Polish List of Persons and Entities Subject to Sanctions", country: "Poland" },
+  { id: "210", name: "Polish Sanctions Countering Money Laundering and Terror Financing", country: "Poland" },
+  { id: "211", name: "Art. 118 of the Act of March 1, 2018 on counteracting money laundering and terrorism financing", country: "Poland" },
+  { id: "212", name: "Qatar Unified Record of Persons and Entities on Sanction List", country: "Qatar" },
+  { id: "213", name: "ransomwhe.re ransomware addresses", country: "United States" },
+  { id: "214", name: "Register of Enterprises of the Republic of Latvia (Uzņēmumu reģistrs)", country: "Latvia" },
+  { id: "215", name: "Research Organizations Registry", country: "Global (Research Organization Registry)" },
+  { id: "216", name: "RISE Moldova People of interest", country: "Moldova" },
+  { id: "217", name: "Romania Government Decision No. 1.272/2005: List of Suspected Terrorists", country: "Romania" },
+  { id: "218", name: "Russia Banking Registry", country: "Russia" },
+  { id: "219", name: "Russian National Settlement Depository (NSD, ISIN Assignment)", country: "Russia" },
+  { id: "220", name: "Russian Oligarch/Billionaires Database", country: "Global (OpenSanctions)" },
+  { id: "221", name: "US Section 241 CAATSA Report (2018)", country: "United States" },
+  { id: "222", name: "Russian Persons of Interest published by Dossier Center", country: "Russia" },
+  { id: "223", name: "Russian PMC Wagner mercenaries (Myrotvorets list)", country: "Russia" },
+  { id: "224", name: "Russian Unified State Register of Legal Entities (as at Jan 1, 2022)", country: "Russia" },
+  { id: "225", name: "Serbian Domestic List of Designated Persons", country: "Serbia" },
+  { id: "226", name: "Singapore Government Directory", country: "Singapore" },
+  { id: "227", name: "Singapore Targeted Financial Sanctions", country: "Singapore" },
+  { id: "228", name: "Terrorism (Suppression of Financing) Act 2002", country: "Singapore" },
+  { id: "229", name: "Slovenia Business Restrictions", country: "Slovenia" },
+  { id: "230", name: "Slovenian Political Officials from Zvezoskop", country: "Slovenia" },
+  { id: "231", name: "South Africa Municipal Leadership", country: "South Africa" },
+  { id: "232", name: "South Africa National and Provincial Legislators", country: "South Africa" },
+  { id: "233", name: "South Africa Targeted Financial Sanctions", country: "South Africa" },
+  { id: "234", name: "South Africa Wanted Persons", country: "South Africa" },
+  { id: "235", name: "Spain National Police Most Wanted List", country: "Spain" },
+  { id: "236", name: "State Register of legal entities in the Republic of Moldova", country: "Moldova" },
+  { id: "237", name: "Swiss FINMA Final Rulings", country: "Switzerland" },
+  { id: "238", name: "Swiss FINMA Warning List", country: "Switzerland" },
+  { id: "239", name: "Swiss SECO Sanctions/Embargoes", country: "Switzerland" },
+  { id: "240", name: "Former Measures Against Eritrea", country: "Switzerland" },
+  { id: "241", name: "Former Measures Against Ivory Coast", country: "Switzerland" },
+  { id: "242", name: "Former Measures Against Liberia", country: "Switzerland" },
+  { id: "243", name: "Former Measures Against Yugoslavia", country: "Switzerland" },
+  { id: "244", name: "Measures Against Belarus", country: "Switzerland" },
+  { id: "245", name: "Measures Against Burundi", country: "Switzerland" },
+  { id: "246", name: "Measures Against Guinea", country: "Switzerland" },
+  { id: "247", name: "Measures Against Guinea Bissau", country: "Switzerland" },
+  { id: "248", name: "Measures Against Libya", country: "Switzerland" },
+  { id: "249", name: "Measures Against Myanmar", country: "Switzerland" },
+  { id: "250", name: "Measures Against Nicaragua", country: "Switzerland" },
+  { id: "251", name: "Measures Against North Korea", country: "Switzerland" },
+  { id: "252", name: "Measures Against Persons And Organizations With Links To Usama Bin Laden, Al-Qaeda Or The Taliban", country: "Switzerland" },
+  { id: "253", name: "Measures Against Somalia", country: "Switzerland" },
+  { id: "254", name: "Measures Against South Sudan", country: "Switzerland" },
+  { id: "255", name: "Measures Against Sudan", country: "Switzerland" },
+  { id: "256", name: "Measures Against Syria", country: "Switzerland" },
+  { id: "257", name: "Measures Against The Central African Republic", country: "Switzerland" },
+  { id: "258", name: "Measures Against The Democratic Republic Of Congo", country: "Switzerland" },
+  { id: "259", name: "Measures Against The Islamic Republic Of Iran", country: "Switzerland" },
+  { id: "260", name: "Measures Against The Republic Of Iraq", country: "Switzerland" },
+  { id: "261", name: "Measures Against The Republic Of Mali", country: "Switzerland" },
+  { id: "262", name: "Measures Against Venezuela", country: "Switzerland" },
+  { id: "263", name: "Measures Against Yemen", country: "Switzerland" },
+  { id: "264", name: "Measures Against Zimbabwe", country: "Switzerland" },
+  { id: "265", name: "Measures In Relation To Haiti", country: "Switzerland" },
+  { id: "266", name: "Measures In relation To Moldova", country: "Switzerland" },
+  { id: "267", name: "Measures In Relation To The Situation In Ukraine", country: "Switzerland" },
+  { id: "268", name: "Measures In Relation With The Rafiq Hariri Assassination", country: "Switzerland" },
+  { id: "269", name: "Measures Related To Lebanon", country: "Switzerland" },
+  { id: "270", name: "Syrian Observatory of Political and Economic Networks", country: "Global (Obsalytics)" },
+  { id: "271", name: "Thailand Cabinet of Ministers", country: "Thailand" },
+  { id: "272", name: "Thailand Designated Persons List", country: "Thailand" },
+  { id: "273", name: "List of designated persons under Section 7", country: "Thailand" },
+  { id: "274", name: "The Sentry Atlas", country: "Global (The Sentry)" },
+  { id: "275", name: "Türkiye Asset Freezing Sanctions List (MASAK)", country: "Türkiye" },
+  { id: "276", name: "Türkiye Grand National Assembly", country: "Türkiye" },
+  { id: "277", name: "Türkiye Ministry Of Interior Terrorist Wanted List", country: "Türkiye" },
+  { id: "278", name: "U.S. Immigration and Customs Enforcement Most Wanted Fugitives", country: "United States" },
+  { id: "279", name: "UK Companies House Disqualified Directors", country: "United Kingdom" },
+  { id: "280", name: "UK Companies House People with Significant Control", country: "United Kingdom" },
+  { id: "281", name: "UK FCDO Sanctions List", country: "United Kingdom" },
+  { id: "282", name: "Sanctions and Anti-Money Laundering Act 2018", country: "United Kingdom" },
+  { id: "283", name: "UK HMT/OFSI Consolidated List of Targets", country: "United Kingdom" },
+  { id: "284", name: "Financial Sanctions, UK freezing orders", country: "United Kingdom" },
+  { id: "285", name: "UK arms embargo on mainland China and Hong Kong", country: "United Kingdom" },
+  { id: "286", name: "UK sanctions relating to Afghanistan", country: "United Kingdom" },
+  { id: "287", name: "UK sanctions relating to Armenia and Azerbaijan", country: "United Kingdom" },
+  { id: "288", name: "UK sanctions relating to Bosnia and Herzegovina", country: "United Kingdom" },
+  { id: "289", name: "UK sanctions relating to chemical weapons", country: "United Kingdom" },
+  { id: "290", name: "UK sanctions relating to cyber activity", country: "United Kingdom" },
+  { id: "291", name: "UK sanctions relating to domestic counter-terrorism", country: "United Kingdom" },
+  { id: "292", name: "UK sanctions relating to global anti-corruption", country: "United Kingdom" },
+  { id: "293", name: "UK sanctions relating to global human rights", country: "United Kingdom" },
+  { id: "294", name: "UK sanctions relating to Guinea", country: "United Kingdom" },
+  { id: "295", name: "UK Sanctions relating to Haiti", country: "United Kingdom" },
+  { id: "296", name: "UK sanctions relating to international counter-terrorism", country: "United Kingdom" },
+  { id: "297", name: "UK sanctions relating to Iran", country: "United Kingdom" },
+  { id: "298", name: "UK sanctions relating to Iran (nuclear weapons)", country: "United Kingdom" },
+  { id: "299", name: "UK sanctions relating to Iraq", country: "United Kingdom" },
+  { id: "300", name: "UK sanctions relating to ISIL (Da’esh) and Al-Qaida", country: "United Kingdom" },
+  { id: "301", name: "UK sanctions relating to Lebanon", country: "United Kingdom" },
+  { id: "302", name: "UK sanctions relating to Lebanon (Assassination of Rafiq Hariri and others)", country: "United Kingdom" },
+  { id: "303", name: "UK sanctions relating to Libya", country: "United Kingdom" },
+  { id: "304", name: "UK sanctions relating to Mali", country: "United Kingdom" },
+  { id: "305", name: "UK sanctions relating to Myanmar", country: "United Kingdom" },
+  { id: "306", name: "UK sanctions relating to Nicaragua", country: "United Kingdom" },
+  { id: "307", name: "UK sanctions relating to Russia", country: "United Kingdom" },
+  { id: "308", name: "UK sanctions relating to Somalia", country: "United Kingdom" },
+  { id: "309", name: "UK sanctions relating to South Sudan", country: "United Kingdom" },
+  { id: "310", name: "UK sanctions relating to Sudan", country: "United Kingdom" },
+  { id: "311", name: "UK sanctions relating to Syria", country: "United Kingdom" },
+  { id: "312", name: "UK sanctions relating to Syria cultural property", country: "United Kingdom" },
+  { id: "313", name: "UK sanctions relating to the Central African Republic", country: "United Kingdom" },
+  { id: "314", name: "UK sanctions relating to the Democratic People’s Republic of Korea", country: "United Kingdom" },
+  { id: "315", name: "UK sanctions relating to the Democratic Republic of the Congo", country: "United Kingdom" },
+  { id: "316", name: "UK sanctions relating to the Republic of Belarus", country: "United Kingdom" },
+  { id: "317", name: "UK sanctions relating to the Republic of Guinea-Bissau", country: "United Kingdom" },
+  { id: "318", name: "UK sanctions relating to unauthorized drilling activities", country: "United Kingdom" },
+  { id: "319", name: "UK sanctions relating to Venezuela", country: "United Kingdom" },
+  { id: "320", name: "UK sanctions relating to Yemen", country: "United Kingdom" },
+  { id: "321", name: "UK sanctions relating to Zimbabwe", country: "United Kingdom" },
+  { id: "322", name: "UK HMT/OFSI Investment Bans", country: "United Kingdom" },
+  { id: "323", name: "UK NCA Most Wanted", country: "United Kingdom" },
+  { id: "324", name: "UK Proscribed Terrorist Groups or Organizations", country: "United Kingdom" },
+  { id: "325", name: "Ukraine Consolidated State Registry", country: "Ukraine" },
+  { id: "326", name: "Ukraine NSDC State Register of Sanctions", country: "Ukraine" },
+  { id: "327", name: "Law of Ukraine \"On Sanctions\" No. 1644-VII dated 14 Aug. 2014", country: "Ukraine" },
+  { id: "328", name: "Ukraine SFMS Blacklist", country: "Ukraine" },
+  { id: "329", name: "UN Heads of State, Heads of Government and Ministers for Foreign Affairs", country: "Global" },
+  { id: "330", name: "UN Security Council Consolidated Sanctions", country: "Global" },
+  { id: "331", name: "Al-Shabaab Sanctions", country: "Global" },
+  { id: "332", name: "Central African Republic Sanctions", country: "Global" },
+  { id: "333", name: "Democratic Republic Of Congo Sanctions", country: "Global" },
+  { id: "334", name: "Guinea-Bissau Sanctions", country: "Global" },
+  { id: "335", name: "Haiti Sanctions", country: "Global" },
+  { id: "336", name: "Iraq Sanctions", country: "Global" },
+  { id: "337", name: "ISIL & Al-Qaida Sanctions", country: "Global" },
+  { id: "338", name: "Islamic State In Iraq And The Levant (Da’esh), Al-Qaida And Associated Individuals", country: "Global" },
+  { id: "339", name: "Libya Sanctions", country: "Global" },
+  { id: "340", name: "North Korea Sanctions", country: "Global" },
+  { id: "341", name: "Rafiq Hariri Killing Sanctions", country: "Global" },
+  { id: "342", name: "South Sudan Sanctions", country: "Global" },
+  { id: "343", name: "Sudan Sanctions", country: "Global" },
+  { id: "344", name: "Taliban Sanctions", country: "Global" },
+  { id: "345", name: "Yemen Sanctions", country: "Global" },
+  { id: "346", name: "United Arab Emirates Local Terrorist List", country: "United Arab Emirates" },
+  { id: "347", name: "United States Periodically Listing Updates to Management (PLUM) Reporting", country: "United States" },
+  { id: "348", name: "Uruguayan Politically Exposed Persons (PEP)", country: "Uruguay" },
+  { id: "349", name: "US Alaska Medical Assistance Excluded Provider List", country: "United States" },
+  { id: "350", name: "US Anti-Kleptocracy and Human Rights Visa Restrictions", country: "United States" },
+  { id: "351", name: "US Arizona Medicaid Suspensions and Terminations", country: "United States" },
+  { id: "352", name: "US Arkansas Medicaid Excluded Provider List", country: "United States" },
+  { id: "353", name: "US BIS Denied Persons List", country: "United States" },
+  { id: "354", name: "US California Medicaid Suspended and ineligible providers", country: "United States" },
+  { id: "355", name: "US CBP Withhold Release Orders and Findings", country: "United States" },
+  { id: "356", name: "US CIA World Factbook Heads of State and Government", country: "United States" },
+  { id: "357", name: "US CIA World Leaders", country: "United States" },
+  { id: "358", name: "US Colorado Medicaid Terminated Provider List", country: "United States" },
+  { id: "359", name: "US DEA Fugitives", country: "United States" },
+  { id: "360", name: "US Department of State Terrorist Exclusion", country: "United States" },
+  { id: "361", name: "US Directorate of Defense Trade Controls AECA Debarments", country: "United States" },
+  { id: "362", name: "US Directorate of Defense Trade Controls Penalties & Oversight Agreements", country: "United States" },
+  { id: "363", name: "US DoD Chinese military companies", country: "United States" },
+  { id: "364", name: "Chinese Military Companies Sanctions (1260H)", country: "United States" },
+  { id: "365", name: "US FBI Lazarus Group Crypto Wallets", country: "United States" },
+  { id: "366", name: "US FBI Most Wanted", country: "United States" },
+  { id: "367", name: "US FCC Covered List", country: "United States" },
+  { id: "368", name: "List of Equipment and Services Covered By Section 2 of The Secure Networks Act", country: "United States" },
+  { id: "369", name: "US FDIC Failed Banks", country: "United States" },
+  { id: "370", name: "US Federal Reserve Enforcement Actions", country: "United States" },
+  { id: "371", name: "US Federal Reserve Enforcement Actions", country: "United States" },
+  { id: "372", name: "US FinCEN 311 and 9714 Special Measures", country: "United States" },
+  { id: "373", name: "US FINRA Enforcement Actions", country: "United States" },
+  { id: "374", name: "US Georgia Healthcare provider exclusions", country: "United States" },
+  { id: "375", name: "US Hawaii Medicaid Exclusions and Reinstatements", country: "United States" },
+  { id: "376", name: "US Health and Human Sciences Inspector General Exclusions", country: "United States" },
+  { id: "377", name: "US Indiana Medicaid Terminated Provider List", country: "United States" },
+  { id: "378", name: "US Iowa Medicaid Terminated Provider List", country: "United States" },
+  { id: "379", name: "US Kansas Medicaid Terminated Provider List", country: "United States" },
+  { id: "380", name: "US Kentucky Terminated and Excluded Providers", country: "United States" },
+  { id: "381", name: "US Legislators by Plural (formerly OpenStates)", country: "United States" },
+  { id: "382", name: "US Louisiana Department of Health Adverse Actions List", country: "United States" },
+  { id: "383", name: "US Maryland Sanctioned Providers", country: "United States" },
+  { id: "384", name: "US Massachusetts Suspensions and Exclusions from MassHealth", country: "United States" },
+  { id: "385", name: "US Members of the Congress", country: "United States" },
+  { id: "386", name: "US Michigan Medicaid Sanctioned Provider List", country: "United States" },
+  { id: "387", name: "US Minnesota Health Care Programs Excluded Providers", country: "United States" },
+  { id: "388", name: "US Mississippi Medicaid Terminated Provider List", country: "United States" },
+  { id: "389", name: "US Missouri Medicaid Provider Terminations", country: "United States" },
+  { id: "390", name: "US Montana Medicaid Excluded and Terminated Providers", country: "United States" },
+  { id: "391", name: "US Navy Leadership", country: "United States" },
+  { id: "392", name: "US Nevada Medicaid Sanctions", country: "United States" },
+  { id: "393", name: "US New Hampshire Medicaid Exclusion and Sanction List", country: "United States" },
+  { id: "394", name: "US New Jersey Ineligible Medicaid Providers", country: "United States" },
+  { id: "395", name: "US New York State Medicaid Exclusions", country: "United States" },
+  { id: "396", name: "US North Carolina Excluded Providers List", country: "United States" },
+  { id: "397", name: "US North Dakota Medicaid Terminated Provider List", country: "United States" },
+  { id: "398", name: "US OCC Enforcement Actions", country: "United States" },
+  { id: "399", name: "US OFAC Consolidated (non-SDN) List", country: "United States" },
+  { id: "400", name: "Burma-Related Sanctions", country: "United States" },
+  { id: "401", name: "Chinese Military Companies Sanctions", country: "United States" },
+  { id: "402", name: "Foreign Sanctions Evaders (FSE) List", country: "United States" },
+  { id: "403", name: "Non-SDN Chinese Military-Industrial Complex Companies", country: "United States" },
+  { id: "404", name: "Palestine Legislative Council", country: "United States" },
+  { id: "405", name: "Sectoral Sanctions Identifications (SSI) List", country: "United States" },
+  { id: "406", name: "US OFAC Specially Designated Nationals (SDN) List", country: "United States" },
+  { id: "407", name: "Afghanistan-Related Sanctions", country: "United States" },
+  { id: "408", name: "Balkans-Related Sanctions", country: "United States" },
+  { id: "409", name: "Belarus Sanctions", country: "United States" },
+  { id: "410", name: "Central African Republic Sanctions", country: "United States" },
+  { id: "411", name: "Counter Narcotics Trafficking Sanctions", country: "United States" },
+  { id: "412", name: "Counter Terrorism", country: "United States" },
+  { id: "413", name: "Cuba Sanctions", country: "United States" },
+  { id: "414", name: "Cyber-Related Sanctions", country: "United States" },
+  { id: "415", name: "Democratic Republic Of The Congo-Related Sanctions", country: "United States" },
+  { id: "416", name: "Ethiopia-Related Sanctions", country: "United States" },
+  { id: "417", name: "Foreign Interference In A United States Election Sanctions", country: "United States" },
+  { id: "418", name: "Global Magnitsky Sanctions", country: "United States" },
+  { id: "419", name: "Hong Kong-Related Sanctions", country: "United States" },
+  { id: "420", name: "Hostages And Wrongfully Detained U.S. Nationals Sanctions", country: "United States" },
+  { id: "421", name: "Iran Sanctions", country: "United States" },
+  { id: "422", name: "Iraq-Related Sanctions", country: "United States" },
+  { id: "423", name: "Lebanon-Related Sanctions", country: "United States" },
+  { id: "424", name: "Libya Sanctions", country: "United States" },
+  { id: "425", name: "Magnitsky Sanctions", country: "United States" },
+  { id: "426", name: "Mali-Related Sanctions", country: "United States" },
+  { id: "427", name: "Nicaragua-Related Sanctions", country: "United States" },
+  { id: "428", name: "Non-Proliferation Sanctions", country: "United States" },
+  { id: "429", name: "North Korea Sanctions", country: "United States" },
+  { id: "430", name: "Russian Harmful Foreign Activities Sanctions", country: "United States" },
+  { id: "431", name: "Somalia Sanctions (EO 13620, EO 13536)", country: "United States" },
+  { id: "432", name: "South Sudan-Related Sanctions (EO 13664)", country: "United States" },
+  { id: "433", name: "Sudan and Darfur Sanctions", country: "United States" },
+  { id: "434", name: "Syria-Related Sanctions (EO 13894)", country: "United States" },
+  { id: "435", name: "Syria Sanctions (EO 13608 et al.)", country: "United States" },
+  { id: "436", name: "Transnational Criminal Organizations", country: "United States" },
+  { id: "437", name: "Ukraine-/Russia-Related Sanctions", country: "United States" },
+  { id: "438", name: "Venezuela-Related Sanctions", country: "United States" },
+  { id: "439", name: "Yemen-Related Sanctions (EO 13611)", country: "United States" },
+  { id: "440", name: "US Office of Antiboycott Compliance Requester List", country: "United States" },
+  { id: "441", name: "US Ohio Medicaid Excluded and Suspended Providers", country: "United States" },
+  { id: "442", name: "US Oregon State Medicaid Fraud Convictions", country: "United States" },
+  { id: "443", name: "US Pennsylvania Medicheck list", country: "United States" },
+  { id: "444", name: "US Public Alert: Unregistered Soliciting Entities (PAUSE)", country: "United States" },
+  { id: "445", name: "US SAM Procurement Exclusions", country: "United States" },
+  { id: "446", name: "US SEC Actions Due to Harmed Investors", country: "United States" },
+  { id: "447", name: "US Secret Service Most Wanted Fugitives", country: "United States" },
+  { id: "448", name: "US South Carolina Excluded Providers", country: "United States" },
+  { id: "449", name: "US Special Legislative Exclusions", country: "United States" },
+  { id: "450", name: "James M. Inhofe National Defense Authorization Act (5949 List)", country: "United States" },
+  { id: "451", name: "John S. McCain National Defense Authorization Act for Fiscal Year 2019 (889 List)", country: "United States" },
+  { id: "452", name: "Section 1286 of the John S. McCain National Defense Authorization Act for Fiscal Year 2019 (Public Law 115 - 232)", country: "United States" },
+  { id: "453", name: "Section 353 of the Corrupt and Undemocratic Actors Report", country: "United States" },
+  { id: "454", name: "US State Department Cuba Sanctions", country: "United States" },
+  { id: "455", name: "Cuba Prohibited Accommodations List", country: "United States" },
+  { id: "456", name: "List of Restricted Entities and Subentities Associated With Cuba", country: "United States" },
+  { id: "457", name: "US State Department Senior Officials", country: "United States" },
+  { id: "458", name: "US Tennessee Terminated Providers List", country: "United States" },
+  { id: "459", name: "US Trade Consolidated Screening List (CSL)", country: "United States" },
+  { id: "460", name: "AECA Debarred List", country: "United States" },
+  { id: "461", name: "BIS Denied Persons List (DPL)", country: "United States" },
+  { id: "462", name: "BIS Entity List (EL)", country: "United States" },
+  { id: "463", name: "BIS Military End-Users (MEU) List", country: "United States" },
+  { id: "464", name: "BIS Unverified List", country: "United States" },
+  { id: "465", name: "US UFLPA Entity List", country: "United States" },
+  { id: "466", name: "Uyghur Forced Labor Prevention Act (Public Law No. 117-78)", country: "United States" },
+  { id: "467", name: "US Washington State Provider Termination and Exclusion List", country: "United States" },
+  { id: "468", name: "US West Virginia Medicaid Provider Exclusions and Terminations", country: "United States" },
+  { id: "469", name: "US Wyoming Medicaid Provider Exclusion List", country: "United States" },
+  { id: "470", name: "Venezuela Members of the National Assembly", country: "Venezuela" },
+  { id: "471", name: "Wikidata", country: "Global" },
+  { id: "472", name: "Wikidata Entities of Interest", country: "Global" },
+  { id: "473", name: "Wikidata Persons in Relevant Categories", country: "Global" },
+  { id: "474", name: "Wikidata Politically Exposed Persons", country: "Global" },
+  { id: "475", name: "WorldBank Debarred Providers", country: "Global" },
+
+
+];
+
+interface AllDataSectionProps {
+  translations: {
+    allData: string
+    searchPlaceholder: string
+    id: string
+    name: string
+    country: string
+    previous: string
+    next: string
+    page: string
+    of: string
+  }
+}
+
+export function AllDataSection({ translations }: AllDataSectionProps) {
+  const [searchTerm, setSearchTerm] = useState("")
+  const [currentPage, setCurrentPage] = useState(1)
+  const itemsPerPage = 7
+
+  const filteredData = mockData.filter(item =>
+    Object.values(item).some(value =>
+      value.toLowerCase().includes(searchTerm.toLowerCase())
+    )
+  )
+
+  const totalPages = Math.ceil(filteredData.length / itemsPerPage)
+  const startIndex = (currentPage - 1) * itemsPerPage
+  const paginatedData = filteredData.slice(startIndex, startIndex + itemsPerPage)
+
+  return (
+    <Card className="overflow-hidden">
+      <CardHeader className="bg-gradient-to-r from-blue-600 to-purple-600">
+        <CardTitle className="text-3xl font-bold text-white">{translations.allData}</CardTitle>
+      </CardHeader>
+      <CardContent className="p-6">
+        <div className="relative mb-6">
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+          <Input
+            placeholder={translations.searchPlaceholder}
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="pl-10 pr-4 py-2 w-full border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+          />
+        </div>
+        <div className="overflow-x-auto">
+          <Table>
+            <TableHeader>
+              <TableRow className="bg-gray-100">
+                <TableHead className="font-bold">{translations.id}</TableHead>
+                <TableHead className="font-bold">{translations.name}</TableHead>
+                <TableHead className="font-bold">{translations.country}</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {paginatedData.map((item) => (
+                <TableRow key={item.id} className="hover:bg-gray-50 transition-colors">
+                  <TableCell className="font-medium">{item.id}</TableCell>
+                  <TableCell>
+                    <span>{item.name}</span>
+                  </TableCell>
+                  <TableCell>
+                    <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-300">
+                      {item.country}
+                    </Badge>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </div>
+        <div className="flex justify-between items-center mt-6">
+          <Button
+            onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+            disabled={currentPage === 1}
+            variant="default"
+            className="bg-blue-600 hover:bg-blue-700 text-white"
+          >
+            <ChevronLeft className="w-4 h-4 mr-2" />
+            <span>{translations.previous}</span>
+          </Button>
+          <span className="text-sm text-gray-600">
+            {translations.page} {currentPage} {translations.of} {totalPages}
+          </span>
+          <Button
+            onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+            disabled={currentPage === totalPages}
+            variant="default"
+            className="bg-blue-600 hover:bg-blue-700 text-white"
+          >
+            <span>{translations.next}</span>
+            <ChevronRight className="w-4 h-4 ml-2" />
+          </Button>
+        </div>
+      </CardContent>
+    </Card>
+  )
+}
+

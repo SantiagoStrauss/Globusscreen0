@@ -174,11 +174,11 @@ const pricingPlans = [
   {
     name: { en: "Basic", es: "Básico" },
     description: { en: "For small businesses getting started with compliance", es: "Para pequeñas empresas que comienzan con el cumplimiento" },
-    price: { monthly: 99, annual: 79 },
+    price: { monthly: 60, annual: 50 },
     features: [
-      { name: { en: "Up to 1,000 screenings/month", es: "Hasta 1,000 verificaciones/mes" }, included: true },
+      { name: { en: "Up to 100 screenings/month", es: "Hasta 100 verificaciones/mes" }, included: true },
       { name: { en: "Basic sanctions lists", es: "Listas de sanciones básicas" }, included: true },
-      { name: { en: "Email support", es: "Soporte por correo electrónico" }, included: true },
+      { name: { en: "Phone & email support", es: "Soporte por teléfono y correo" }, included: true },
       { name: { en: "API access", es: "Acceso a API" }, included: false },
       { name: { en: "Custom integrations", es: "Integraciones personalizadas" }, included: false },
     ],
@@ -186,9 +186,9 @@ const pricingPlans = [
   {
     name: { en: "Pro", es: "Pro" },
     description: { en: "For growing businesses with advanced compliance needs", es: "Para empresas en crecimiento con necesidades avanzadas de cumplimiento" },
-    price: { monthly: 299, annual: 239 },
+    price: { monthly: 350, annual: 320 },
     features: [
-      { name: { en: "Up to 10,000 screenings/month", es: "Hasta 10,000 verificaciones/mes" }, included: true },
+      { name: { en: "Up to 1,000 screenings/month", es: "Hasta 1,000 verificaciones/mes" }, included: true },
       { name: { en: "Extended sanctions lists", es: "Listas de sanciones extendidas" }, included: true },
       { name: { en: "24/7 phone & email support", es: "Soporte 24/7 por teléfono y correo" }, included: true },
       { name: { en: "API access", es: "Acceso a API" }, included: true },

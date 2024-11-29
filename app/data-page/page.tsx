@@ -22,6 +22,7 @@ import {
   Cell,
   Area,
 } from "recharts"
+import { AllDataSection } from "@/components/AllDataSection"
 
 export const runtime = 'edge';
 
@@ -29,7 +30,7 @@ const translations = {
   en: {
     title: "Comprehensive Global Data",
     subtitle: "Powering compliance with unparalleled depth and breadth",
-    dataPoints: "Data Points",
+    entities: "Entities",
     countries: "Countries Covered",
     updateFrequency: "Update Frequency",
     sources: "Trusted Sources",
@@ -81,11 +82,20 @@ const translations = {
     individualScreening: "Individual Screening",
     batchProcessing: "Batch Processing",
     apiIntegration: "API Integration",
+    allData: "Data Bases",
+    searchPlaceholder: "Search data...",
+    id: "ID",
+    name: "Name",
+    country: "Country",
+    previous: "Previous",
+    next: "Next",
+    page: "Page",
+    of: "of",
   },
   es: {
     title: "Datos Globales Integrales",
     subtitle: "Impulsando el cumplimiento con una profundidad y amplitud sin igual",
-    dataPoints: "Puntos de Datos",
+    entities: "Entidades",
     countries: "Países Cubiertos",
     updateFrequency: "Frecuencia de Actualización",
     sources: "Fuentes Confiables",
@@ -137,23 +147,29 @@ const translations = {
     individualScreening: "Verificación Individual",
     batchProcessing: "Procesamiento por Lotes",
     apiIntegration: "Integración API",
+    allData: "Bases de datos", // Added for AllDataSection
+    searchPlaceholder: "Buscar datos...",
+    id: "ID",
+    name: "Nombre",
+    country: "País",
+    previous: "Anterior",
+    next: "Siguiente",
+    page: "Página",
+    of: "de",
   },
 }
 
 const dataGrowth = [
-  { name: "2018", value: 50 },
-  { name: "2019", value: 75 },
-  { name: "2020", value: 110 },
-  { name: "2021", value: 160 },
-  { name: "2022", value: 230 },
-  { name: "2023", value: 320 },
+  { name: "2021", value: 41 },
+  { name: "2022", value: 56 },
+  { name: "2023", value: 77 },
+  { name: "2024", value: 122 },
 ]
 
 const dataBreakdown = [
-  { name: "Sanctions", value: 30 },
-  { name: "PEP", value: 25 },
-  { name: "Adverse Media", value: 20 },
-  { name: "Law Enforcement", value: 25 },
+  { name: "People", value: 55 },
+  { name: "Companies", value: 37 },
+  { name: "Assets and securities", value: 8 },
 ]
 
 const COLORS = ["#3B82F6", "#10B981", "#F59E0B", "#EF4444"]
@@ -181,6 +197,19 @@ export default function EnhancedDataPage() {
 
   const toggleLanguage = () => {
     setLanguage(lang => lang === 'en' ? 'es' : 'en')
+  }
+
+  // Extract only the necessary translations for AllDataSection
+  const allDataTranslations = {
+    allData: t.allData,
+    searchPlaceholder: t.searchPlaceholder,
+    id: t.id,
+    name: t.name,
+    country: t.country,
+    previous: t.previous,
+    next: t.next,
+    page: t.page,
+    of: t.of,
   }
 
   return (
@@ -215,10 +244,10 @@ export default function EnhancedDataPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.4 }}
           >
-            <DataPoint icon={Database} value="500M+" label={t.dataPoints} />
-            <DataPoint icon={Globe} value="200+" label={t.countries} />
+            <DataPoint icon={Database} value="122M+" label={t.entities} />
+            <DataPoint icon={Globe} value="103" label={t.countries} />
             <DataPoint icon={RefreshCcw} value={t.daily} label={t.updateFrequency} />
-            <DataPoint icon={Shield} value="1000+" label={t.sources} />
+            <DataPoint icon={Shield} value="475" label={t.sources} />
           </motion.div>
           <motion.div
             initial={{ opacity: 0, scale: 0.8 }}
@@ -358,7 +387,7 @@ export default function EnhancedDataPage() {
                       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                         {[
                           { label: t.accuracy, value: "99.9%" },
-                          { label: t.coverage, value: "200+" },
+                          { label: t.coverage, value: "103" },
                           { label: t.consistency, value: "100%" },
                         ].map((item, index) => (
                           <Card key={index} className="text-center p-6 bg-gradient-to-br from-blue-50 to-purple-50 hover:shadow-lg transition-all duration-300">
@@ -392,6 +421,11 @@ export default function EnhancedDataPage() {
               </Card>
             ))}
           </div>
+        </section>
+
+        <section className="mb-24">
+          <h2 className="text-4xl font-bold text-center mb-12 text-blue-600">{t.allData}</h2>
+          <AllDataSection translations={allDataTranslations} /> {/* Passed only the required translations */}
         </section>
 
         <section className="text-center bg-gradient-to-r from-blue-600 to-purple-600 text-white py-16 rounded-3xl shadow-2xl">

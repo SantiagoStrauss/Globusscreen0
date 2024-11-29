@@ -1,7 +1,7 @@
 'use client'
 import { Suspense, useState, useMemo } from "react"
 import { signUpAction } from "@/app/actions"
-import { FormMessage, Message } from "@/components/form-message"
+import { FormMessage } from "@/components/form-message"
 import { SubmitButton } from "@/components/submit-button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -9,7 +9,7 @@ import Link from "next/link"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Globe } from 'lucide-react'
-import { useSearchParams, useRouter } from "next/navigation"
+import { useSearchParams } from "next/navigation"
 
 export const runtime = 'edge';
 
@@ -19,7 +19,6 @@ function SignupForm({ language, translations }: { language: 'en' | 'es', transla
   const [errors, setErrors] = useState<{email?: string, password?: string, firstName?: string, lastName?: string, confirmPassword?: string}>({})
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const router = useRouter()
 
   const t = translations[language]
   const messageParam = searchParams.get('message')
@@ -49,11 +48,11 @@ function SignupForm({ language, translations }: { language: 'en' | 'es', transla
     return Object.keys(newErrors).length === 0
   }
 
-  const handlePasswordChange = (event) => {
+  const handlePasswordChange = (event:any) => {
     setPassword(event.target.value);
   };
 
-  const handleConfirmPasswordChange = (event) => {
+  const handleConfirmPasswordChange = (event:any) => {
     const newErrors: {email?: string, password?: string, firstName?: string, lastName?: string, confirmPassword?: string} = {}
     setConfirmPassword(event.target.value);
     console.log(confirmPassword, password)

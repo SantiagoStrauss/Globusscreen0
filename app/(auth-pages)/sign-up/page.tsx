@@ -16,7 +16,9 @@ export const runtime = 'edge';
 
 function SignupForm({ language, translations }: { language: 'en' | 'es', translations: any }) {
   const searchParams = useSearchParams()
-  const [errors, setErrors] = useState<{email?: string, password?: string}>({})
+  const [errors, setErrors] = useState<{email?: string, password?: string, firstName?: string, lastName?: string, confirmPassword?: string}>({})
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const router = useRouter()
 
   const t = translations[language]
@@ -26,7 +28,7 @@ function SignupForm({ language, translations }: { language: 'en' | 'es', transla
   const serverError = errorParam || ''
 
   const validateForm = (formData: FormData) => {
-    const newErrors: {email?: string, password?: string} = {}
+    const newErrors: {email?: string, password?: string, firstName?: string, lastName?: string, confirmPassword?: string} = {}
     
     const email = formData.get('email') as string
     const password = formData.get('password') as string
@@ -47,6 +49,23 @@ function SignupForm({ language, translations }: { language: 'en' | 'es', transla
     return Object.keys(newErrors).length === 0
   }
 
+  const handlePasswordChange = (event) => {
+    setPassword(event.target.value);
+  };
+
+  const handleConfirmPasswordChange = (event) => {
+    const newErrors: {email?: string, password?: string, firstName?: string, lastName?: string, confirmPassword?: string} = {}
+    setConfirmPassword(event.target.value);
+    console.log(confirmPassword, password)
+    if (password !== event.target.value && (password.length === event.target.value.length || password.length < event.target.value.length)) {
+      newErrors.confirmPassword = t.errors.passwordsDontMatch;
+    } else {
+      newErrors.confirmPassword = '';
+    }
+    setErrors(newErrors);
+  };
+  
+
   const handleSubmit = async (formData: FormData) => {
     if (validateForm(formData)) {
       await signUpAction(formData)
@@ -65,42 +84,88 @@ function SignupForm({ language, translations }: { language: 'en' | 'es', transla
     <CardContent>
       <form className="flex flex-col gap-4" action={handleSubmit}>
         {serverError && (
-          <div className="p-3 rounded bg-red-50 border border-red-200">
-            <p className="text-sm text-red-600">{serverError}</p>
-          </div>
+            <div className="p-3 rounded bg-red-50 border border-red-200">
+              <p className="text-sm text-red-600">{serverError}</p>
+            </div>
         )}
         <div className="space-y-2">
-          <Label htmlFor="email">{t.email}</Label>
-          <Input 
-            id="email" 
-            name="email" 
-            placeholder="you@example.com" 
-            required 
-            className={`w-full ${errors.email ? 'border-red-500' : ''}`}
+          <Label htmlFor="firstName">{t.firstName}</Label>
+          <Input
+              id="firstName"
+              name="firstName"
+              placeholder="Daniel Santiago"
+              required
+              className={`w-full ${errors.firstName ? 'border-red-500' : ''}`}
           />
           {errors.email && (
-            <p className="text-sm text-red-500 mt-1">{errors.email}</p>
+              <p className="text-sm text-red-500 mt-1">{errors.email}</p>
+          )}
+        </div>
+        <div className="space-y-2">
+          <Label htmlFor="lastName">{t.lastName}</Label>
+          <Input
+              id="lastName"
+              name="lastName"
+              placeholder="Cruz Diaz"
+              required
+              className={`w-full ${errors.lastName ? 'border-red-500' : ''}`}
+          />
+          {errors.email && (
+              <p className="text-sm text-red-500 mt-1">{errors.email}</p>
+          )}
+        </div>
+        <div className="space-y-2">
+          <Label htmlFor="email">{t.email}</Label>
+          <Input
+              id="email"
+              name="email"
+              placeholder="you@example.com"
+              required
+              className={`w-full ${errors.email ? 'border-red-500' : ''}`}
+          />
+          {errors.email && (
+              <p className="text-sm text-red-500 mt-1">{errors.email}</p>
           )}
         </div>
         <div className="space-y-2">
           <Label htmlFor="password">{t.password}</Label>
           <Input
-            type="password"
-            id="password"
-            name="password"
-            placeholder="Your password"
-            minLength={6}
-            required
-            className={`w-full ${errors.password ? 'border-red-500' : ''}`}
+              type="password"
+              id="password"
+              name="password"
+              placeholder="Your password"
+              minLength={6}
+              required
+              className={`w-full ${errors.password ? 'border-red-500' : ''}`}
+              value={password}
+              onChange={handlePasswordChange}
           />
           {errors.password && (
-            <p className="text-sm text-red-500 mt-1">{errors.password}</p>
+              <p className="text-sm text-red-500 mt-1">{errors.password}</p>
           )}
         </div>
-        <SubmitButton pendingText="Signing up..." formAction={handleSubmit} className="w-full mt-4 bg-blue-600 hover:bg-blue-700">
+        <div className="space-y-2">
+          <Label htmlFor="confirmPassword">{t.confirmPassword}</Label>
+          <Input
+              type="password"
+              id="confirmPassword"
+              name="confirmPassword"
+              placeholder="Confirm your password"
+              minLength={6}
+              required
+              className={`w-full ${errors.password ? 'border-red-500' : ''}`}
+              value={confirmPassword}
+              onChange={handleConfirmPasswordChange}
+          />
+          {errors.confirmPassword && (
+              <p className="text-sm text-red-500 mt-1">{errors.confirmPassword}</p>
+          )}
+        </div>
+        <SubmitButton pendingText="Signing up..." formAction={handleSubmit}
+                      className="w-full mt-4 bg-blue-600 hover:bg-blue-700">
           {t.signUpButton}
         </SubmitButton>
-        {message && <FormMessage message={{ message }} />}
+        {message && <FormMessage message={{message}}/>}
       </form>
     </CardContent>
   )
@@ -108,13 +173,16 @@ function SignupForm({ language, translations }: { language: 'en' | 'es', transla
 
 export default function Signup() {
   const [language, setLanguage] = useState<'en' | 'es'>('en')
-  
+
   const translations = useMemo(() => ({
     en: {
       signUp: "Sign up",
       signIn: "Sign in",
       email: "Email",
+      firstName: "First name",
+      lastName: "Last name",
       password: "Password",
+      confirmPassword: "Confirm password",
       alreadyAccount: "Already have an account?",
       createAccount: "Create an account",
       signUpButton: "Sign up",
@@ -122,14 +190,18 @@ export default function Signup() {
         emailRequired: "Email is required",
         emailInvalid: "Please enter a valid email",
         passwordRequired: "Password is required",
-        passwordLength: "Password must be at least 6 characters"
+        passwordLength: "Password must be at least 6 characters",
+        passwordsDontMatch: "Passwords don't match"
       }
     },
     es: {
       signUp: "Registrarse",
       signIn: "Iniciar sesión",
       email: "Correo electrónico",
+      firstName: "Nombres",
+      lastName: "Apellidos",
       password: "Contraseña",
+      confirmPassword: "Confirmar contraseña",
       alreadyAccount: "¿Ya tienes una cuenta?",
       createAccount: "Crear una cuenta",
       signUpButton: "Registrarse",
@@ -137,7 +209,8 @@ export default function Signup() {
         emailRequired: "El correo electrónico es requerido",
         emailInvalid: "Ingrese un correo electrónico válido",
         passwordRequired: "La contraseña es requerida",
-        passwordLength: "La contraseña debe tener al menos 6 caracteres"
+        passwordLength: "La contraseña debe tener al menos 6 caracteres",
+        passwordsDontMatch: "Las contraseñas no coinciden"
       }
     }
   }), [])

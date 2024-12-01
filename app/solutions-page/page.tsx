@@ -270,9 +270,9 @@ const SolutionsPageComponent = () => {
                 key={solution.id}
                 value={solution.id}
                 className="w-full py-2 text-lg rounded-md transition-all duration-300
-                bg-white hover:bg-blue-50 text-gray-500
+                bg-white hover:bg-blue-50 text-gray-700
                 border border-blue-200
-                data-[state=active]:bg-blue-100 data-[state=active]:text-blue-600 
+                data-[state=active]:bg-blue-100 data-[state=active]:text-blue-700
                 data-[state=active]:border-blue-200"
                  >
                 {solution.title[language]}

@@ -104,7 +104,7 @@ const ResultCard: React.FC<{ result: Result }> = ({ result }) => {
       .replace(/_/g, ' ')
       .replace(/\b\w/g, char => char.toUpperCase())
   }
-  const triggerWords = ['sanction', 'wanted', 'crime', 'role.spy', 'risk']
+  const triggerWords = ['sanction', 'wanted', 'crime', 'role.spy', 'export.risk']
 
   const handleExpand = () => {
     setIsExpanded(true)

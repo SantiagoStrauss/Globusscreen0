@@ -236,7 +236,7 @@ const SolutionsPageComponent = () => {
       <main className="container mx-auto px-4 py-16">
         <section className="text-center mb-16">
           <motion.h1
-            className="text-5xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-purple-600"
+            className="text-5xl font-bold mb-4 pb-1 bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-purple-600 leading-tight"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}

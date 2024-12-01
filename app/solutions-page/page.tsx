@@ -236,7 +236,7 @@ const SolutionsPageComponent = () => {
       <main className="container mx-auto px-4 py-16">
         <section className="text-center mb-16">
           <motion.h1
-            className="text-5xl font-bold mb-4 pb-1 bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-purple-600 leading-tight"
+            className="text-5xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-purple-600"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
@@ -244,7 +244,7 @@ const SolutionsPageComponent = () => {
             {translations[language].title}
           </motion.h1>
           <motion.p
-            className="text-xl text-gray-600 mb-8"
+            className="text-xl text--600 mb-8"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.2 }}
@@ -264,13 +264,22 @@ const SolutionsPageComponent = () => {
 
         <section className="mb-16">
           <Tabs defaultValue={activeTab} onValueChange={setActiveTab} className="w-full">
-            <TabsList className="grid w-full grid-cols-3 mb-8">
-              {solutions.map((solution) => (
-                <TabsTrigger key={solution.id} value={solution.id} className="text-lg">
-                  {solution.title[language]}
-                </TabsTrigger>
-              ))}
-            </TabsList>
+          <TabsList className="bg-transparent relative grid w-full grid-cols-1 md:grid-cols-3 gap-2 mb-40 md:mb-8 sm:mb-40">
+            {solutions.map((solution) => (
+              <TabsTrigger
+                key={solution.id}
+                value={solution.id}
+                className="w-full py-2 text-lg rounded-md transition-all duration-300
+                bg-white hover:bg-blue-50 text-gray-500
+                border border-blue-200
+                data-[state=active]:bg-blue-100 data-[state=active]:text-blue-600 
+                data-[state=active]:border-blue-200"
+                 >
+                {solution.title[language]}
+              </TabsTrigger>
+            ))}
+          </TabsList>
+
             <AnimatePresence mode="wait">
               <motion.div
                 key={animationKey}
@@ -278,10 +287,11 @@ const SolutionsPageComponent = () => {
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: -20 }}
                 transition={{ duration: 0.3 }}
+                className="relative z-10 mt-4"
               >
                 {solutions.map((solution) => (
                   <TabsContent key={solution.id} value={solution.id}>
-                    <Card className="border-blue-200 overflow-hidden">
+                    <Card className="border-blue-200 overflow-hidden mb-4">
                       <CardHeader className="bg-gradient-to-r from-blue-100 to-purple-100">
                         <div className="flex items-center space-x-4">
                           <solution.icon className="w-12 h-12 text-blue-600" />

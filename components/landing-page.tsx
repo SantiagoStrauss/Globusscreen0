@@ -373,33 +373,21 @@ export function LandingPageComponent() {
           <div className="container mx-auto px-4">
             <h2 className="text-3xl font-bold text-center mb-8">{t.completeSolutions}</h2>
             <Tabs defaultValue="individual" className="w-full max-w-3xl mx-auto">
-              <TabsList className="grid w-full grid-cols-3 md:flex md:flex-row md:space-x-4">
-                <TabsTrigger value="individual" className="mb-2 md:mb-0">
-                  {t.individualScreening}
-                </TabsTrigger>
-                <TabsTrigger value="batch" className="mb-2 md:mb-0">
-                  {t.batchProcessing}
-                </TabsTrigger>
-                <TabsTrigger value="api" className="mb-2 md:mb-0">
-                  {t.apiIntegration}
-                </TabsTrigger>
+              <TabsList className="bg-transparent md:bg-gray-100 grid w-full grid-cols-1 md:grid-cols-3 gap-2 mb-20 md:mb-8 sm:mb-40">                
+                <TabsTrigger  className="bg-gray-200 text-gray-500 font-medium" value="individual">{t.individualScreening}</TabsTrigger>
+                <TabsTrigger className="bg-gray-200 text-gray-500 font-medium" value="batch">{t.batchProcessing}</TabsTrigger>
+                <TabsTrigger className="bg-gray-200 text-gray-500 font-medium" value="api">{t.apiIntegration}</TabsTrigger>
               </TabsList>
               <TabsContent value="individual">
                 <Card>
                   <CardHeader>
                     <CardTitle>{t.individualScreening}</CardTitle>
-                    <CardDescription>
-                      {language === 'en'
-                        ? 'Quick and easy screening for individual entities'
-                        : 'Verificación rápida y fácil para entidades individuales'}
-                    </CardDescription>
+                    <CardDescription>{language === 'en' ? 'Quick and easy screening for individual entities' : 'Verificación rápida y fácil para entidades individuales'}</CardDescription>
                   </CardHeader>
                   <CardContent>
                     <ul className="list-disc pl-5 space-y-2">
                       <li>{language === 'en' ? 'Instant results' : 'Resultados instantáneos'}</li>
-                      <li>
-                        {language === 'en' ? 'Detailed match information' : 'Información detallada de coincidencias'}
-                      </li>
+                      <li>{language === 'en' ? 'Detailed match information' : 'Información detallada de coincidencias'}</li>
                       <li>{language === 'en' ? 'User-friendly interface' : 'Interfaz fácil de usar'}</li>
                     </ul>
                   </CardContent>
@@ -409,11 +397,7 @@ export function LandingPageComponent() {
                 <Card>
                   <CardHeader>
                     <CardTitle>{t.batchProcessing}</CardTitle>
-                    <CardDescription>
-                      {language === 'en'
-                        ? 'Efficient screening for large datasets'
-                        : 'Verificación eficiente para grandes conjuntos de datos'}
-                    </CardDescription>
+                    <CardDescription>{language === 'en' ? 'Efficient screening for large datasets' : 'Verificación eficiente para grandes conjuntos de datos'}</CardDescription>
                   </CardHeader>
                   <CardContent>
                     <ul className="list-disc pl-5 space-y-2">
@@ -428,11 +412,7 @@ export function LandingPageComponent() {
                 <Card>
                   <CardHeader>
                     <CardTitle>{t.apiIntegration}</CardTitle>
-                    <CardDescription>
-                      {language === 'en'
-                        ? 'Seamless integration with your existing systems'
-                        : 'Integración perfecta con sus sistemas existentes'}
-                    </CardDescription>
+                    <CardDescription>{language === 'en' ? 'Seamless integration with your existing systems' : 'Integración perfecta con sus sistemas existentes'}</CardDescription>
                   </CardHeader>
                   <CardContent>
                     <ul className="list-disc pl-5 space-y-2">

@@ -281,7 +281,7 @@ export function LandingPageComponent() {
               {t.heroSubtitle}
             </p>
             <Button size="lg" className="bg-blue-600 hover:bg-blue-700" asChild>
-              <Link href="/signup">{t.getStarted}</Link>
+              <Link href="https://meetings.hubspot.com/ds-ramosv">{t.getStarted}</Link>
             </Button>
           </div>
 

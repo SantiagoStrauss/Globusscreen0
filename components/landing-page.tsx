@@ -1,4 +1,4 @@
-// landing-page.tsx
+// landing2.tsx
 'use client'
 
 import { useState, useEffect, useRef } from "react"
@@ -7,11 +7,56 @@ import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { CheckCircle, Shield, Zap, Globe, Building, Landmark, Plane, ShoppingBag, Stethoscope, Umbrella, Phone, Car, GraduationCap, Wheat } from "lucide-react"
+import { CheckCircle, Shield, Zap, Globe, Building, Landmark, Plane, ShoppingBag, Stethoscope, Umbrella, Phone, Car, GraduationCap, Wheat } from 'lucide-react'
+import { TypeAnimation } from 'react-type-animation'
 import { TopBar } from "@/components/ui/topbar"
 import { Footer } from "@/components/ui/footer"
 
 export const runtime = 'edge';
+///11111
+interface FooterTranslations {
+  tagline: string;
+  solutions: string;
+  company: string;
+  legal: string;
+  aboutUs: string;
+  careers: string;
+  contact: string;
+  privacyPolicy: string;
+  termsOfService: string;
+}
+
+interface Translations {
+  footer: FooterTranslations;
+  individualScreening: string;
+  batchProcessing: string;
+  apiIntegration: string;
+  solutions: string;
+  data: string;
+  pricing: string;
+  enterprise: string;
+  login: string;
+  signUp: string;
+  heroTitle: string;
+  heroSubtitle: string;
+  getStarted: string;
+  fastScreening: string;
+  fastScreeningDesc: string;
+  completeCoverage: string;
+  completeCoverageDesc: string;
+  complianceAssurance: string;
+  complianceAssuranceDesc: string;
+  trustedBy: string;
+  byTheNumbers: string;
+  entitiesScreened: string;
+  accuracyRate: string;
+  globalWatchlists: string;
+  support: string;
+  completeSolutions: string;
+  readyToStreamline: string;
+  startFreeTrial: string;
+  industriesServed: string;
+}
 
 export function LandingPageComponent() {
   const [activeCustomer, setActiveCustomer] = useState(0)
@@ -23,12 +68,11 @@ export function LandingPageComponent() {
   })
   const [isVisible, setIsVisible] = useState(false)
   const statsRef = useRef<HTMLDivElement | null>(null)
-  const [heroWord, setHeroWord] = useState(language === 'en' ? 'Simple' : 'Simple')
 
   const customers = [
-    { name: "GlobalBank", logo: "/placeholder.svg?height=80&width=80", quote: language === 'en' ? "GlobusScreen has revolutionized our compliance process." : "GlobusScreen ha revolucionado nuestro proceso de cumplimiento." },
-    { name: "TechCorp", logo: "/placeholder.svg?height=80&width=80", quote: language === 'en' ? "Efficient and reliable. A game-changer for our risk management." : "Eficiente y confiable. Un cambio de juego para nuestra gestión de riesgos." },
-    { name: "MegaRetail", logo: "/placeholder.svg?height=80&width=80", quote: language === 'en' ? "Comprehensive coverage and easy to use. Highly recommended." : "Cobertura completa y fácil de usar. Altamente recomendado." },
+    { name: "GlobalBank", logo: "https://cdn.worldvectorlogo.com/logos/target-7.svg", quote: language === 'en' ? "GlobusScreen has revolutionized our compliance process." : "GlobusScreen ha revolucionado nuestro proceso de cumplimiento." },
+    { name: "TechCorp", logo: "https://www.vectorlogo.zone/logos/amazon/amazon-tile.svg", quote: language === 'en' ? "Efficient and reliable. A game-changer for our risk management." : "Eficiente y confiable. Un cambio de juego para nuestra gestión de riesgos." },
+    { name: "MegaRetail", logo: "https://cdn.worldvectorlogo.com/logos/microsoft-5.svg", quote: language === 'en' ? "Comprehensive coverage and easy to use. Highly recommended." : "Cobertura completa y fácil de usar. Altamente recomendado." },
   ]
 
   const industries = [
@@ -46,7 +90,7 @@ export function LandingPageComponent() {
     { name: language === 'en' ? "Agriculture" : "Agricultura", icon: Wheat },
   ]
 
-  const translations = {
+  const translations: { [key: string]: Translations } = {
     en: {
       solutions: "Solutions",
       data: "Data",
@@ -131,7 +175,7 @@ export function LandingPageComponent() {
     },
   }
 
-  const t = translations[language]
+  const t: Translations = translations[language]
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -182,18 +226,6 @@ export function LandingPageComponent() {
     }
   }, [isVisible])
 
-  useEffect(() => {
-    const words = language === 'en'
-      ? ['Simple', 'Fast', 'Reliable', 'Complete']
-      : ['Simple', 'Rápida', 'Confiable', 'Completa']
-    let index = 0
-    const interval = setInterval(() => {
-      setHeroWord(words[index])
-      index = (index + 1) % words.length
-    }, 3000)
-    return () => clearInterval(interval)
-  }, [language])
-
   const toggleLanguage = () => {
     setLanguage(lang => lang === 'en' ? 'es' : 'en')
   }
@@ -209,12 +241,42 @@ export function LandingPageComponent() {
       <main>
         <section className="container mx-auto px-4 py-16">
           <div className="text-center mb-16">
-            <h1 className="text-5xl font-bold mb-4">
+            <h2 className="text-5xl font-bold mb-4">
               {t.heroTitle}
-            </h1>
-            <p className="text-5xl font-bold text-blue-600 mb-4 transition-all duration-500 ease-in-out">
-              {heroWord}
-            </p>
+            </h2>
+            <div className="h-20">
+              <TypeAnimation
+                key={language}
+                sequence={
+                  language === 'en'
+                    ? [
+                        'Simple',
+                        2000,
+                        'Fast',
+                        2000,
+                        'Reliable',
+                        2000,
+                        'Complete',
+                        2000,
+                      ]
+                    : [
+                        'Simple',
+                        2000,
+                        'Rápida',
+                        2000,
+                        'Confiable',
+                        2000,
+                        'Completa',
+                        2000,
+                      ]
+                }
+                wrapper="p"
+                speed={50}
+                style={{ fontSize: '3rem', display: 'inline-block', fontWeight: 'bold', color: '#2563EB' }}
+                repeat={Infinity}
+                cursor={true}
+              />
+            </div>
             <p className="text-xl text-gray-600 mb-8">
               {t.heroSubtitle}
             </p>

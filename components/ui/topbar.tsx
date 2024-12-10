@@ -61,11 +61,11 @@ export const TopBar: React.FC<TopBarProps> = ({ language, toggleLanguage, transl
             <Link href="/data-page" className="block text-gray-600 hover:text-blue-600">{t.data}</Link>
             <Link href="/pricing-page" className="block text-gray-600 hover:text-blue-600">{t.pricing}</Link>
             <Link href="/enterprise-page" className="block text-gray-600 hover:text-blue-600">{t.enterprise}</Link>
-            <Link href="/dashboard-page" className="block text-blue-600 hover:underline">
+            <Link href="/sign-in" className="block text-blue-600 hover:underline">
               {t.login}
             </Link>
             <Button className="w-full bg-blue-600 hover:bg-blue-700" asChild>
-              <Link href="/auth-page?mode=signup">{t.signUp}</Link>
+              <Link href="/sign-up">{t.signUp}</Link>
             </Button>
             <Button
               variant="outline"

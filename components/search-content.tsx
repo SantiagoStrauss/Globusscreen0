@@ -314,7 +314,7 @@ export function SearchContent() {
                   <Label htmlFor="personName">Full Name</Label>
                   <Input
                     id="personName"
-                    placeholder="e.g., Oscar Javier Gonzalez Vargas"
+                    placeholder="e.g., Salvatore Mancuso"
                     value={personForm.name}
                     onChange={(e) => setPersonForm({ ...personForm, name: e.target.value })}
                   />

@@ -14,7 +14,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Input } from "@/components/ui/input"
-import { Bell, LogOut, Home, Users, History, Search, CreditCard, Settings, Menu, Sun, Moon, X, Briefcase } from 'lucide-react'
+import { Bell, LogOut, Home, Users, History, Search, CreditCard, Settings, Menu, Sun, Moon, X, Briefcase, Mail } from 'lucide-react'
 import { GearIcon, PersonIcon } from "@radix-ui/react-icons"
 import {getUserByEmail, signOutAction} from "@/app/actions";
 
@@ -25,9 +25,10 @@ const sidebarItems = [
   { name: "Clients", icon: Users, href: "/dashboard/clients" },
   { name: "Search", icon: Search, href: "/dashboard/search" },
   { name: "History", icon: History, href: "/dashboard/history" },
+  { name: "Know Your Business", icon: Briefcase, href: "/dashboard/know-your-business" },
+  { name: "Leaked Email Verification", icon: Mail, href: "/dashboard/leaked-email-verification" },
   { name: "Billing", icon: CreditCard, href: "/dashboard/billing" },
   { name: "Settings", icon: Settings, href: "/dashboard/settings" },
-  { name: "Know Your Business", icon: Briefcase, href: "/dashboard/know-your-business" },
 ]
 
 export default function Layout({ children }: { children: React.ReactNode }) {
